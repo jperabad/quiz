@@ -25,7 +25,7 @@ exports.index = function(req, res) {
        preguntas que tengan "uno" seguido de "dos", independientemente de
        lo que haya entre "uno" y "dos".*/
     var isearch = "%" + req.query.search.replace(/\x20/g,'%') + "%";
-    models.Quiz.findAll({where:["pregunta like ?", isearch]}).then(
+    models.Quiz.findAll({where:["pregunta like ?", isearch], order: "pregunta ASC"}).then(
        function(quizes) {
           /* Se envía también un resumen del resultado de la búsqueda.*/
           var strResult = '['+req.query.search+']: '+quizes.length+' item(s) found.';
