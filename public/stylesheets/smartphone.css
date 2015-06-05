@@ -5,3 +5,20 @@ body             { background: #333; }
 h2 span, section h3 { display: none; }
 body                { font-size: xx-large; }
 footer, input       { font-size: large; }
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th {
+    background-color: black;
+    color: white;
+}
+
+td {
+    text-align: left;
+}
