@@ -14,11 +14,39 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res) {
-  models.Quiz.findAll().then(
-    function(quizes) {
-      res.render('quizes/index', { quizes: quizes});
-    }
-  ).catch(function(error) { next(error);})
+
+  if(req.query.search)
+  {
+     /* Si hay busqueda: */
+
+    /* Delimitamos el string contenido en search con el comodín % antes y
+       después y cambiamos también los espacios en blanco por %.
+       De esta forma, si busca "uno dos" ("%uno%dos%"), mostrará todas las
+       preguntas que tengan "uno" seguido de "dos", independientemente de
+       lo que haya entre "uno" y "dos".*/
+    var isearch = "%" + req.query.search.replace(/\x20/g,'%') + "%";
+    models.Quiz.findAll({where:["pregunta like ?", isearch]}).then(
+       function(quizes) {
+          /* Se envía también un resumen del resultado de la búsqueda.*/
+          var strResult = '['+req.query.search+']: '+quizes.length+' item(s) found.';
+          res.render('quizes/index',
+                            { quizes: quizes,
+                             searched: strResult
+                             });
+       }
+    ).catch(function(error) { next(error);})
+  }
+  else
+  {
+      /* Si no hay busqueda, se listan todas las preguntas. */
+      models.Quiz.findAll().then(
+         function(quizes) {
+            res.render('quizes/index', { quizes: quizes, searched: ''});
+         }
+      ).catch(function(error) { next(error);})
+  }
+
+
 };
 
 // GET /quizes/:id
