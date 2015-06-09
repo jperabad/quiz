@@ -4,10 +4,19 @@
   <input type="submit" value="Buscar">
 </form>
 <table>
-  <tr><th>Preguntas</th></tr>
+  <tr><th colspan="2">Preguntas</th></tr>
   <% var i; for (i=0; i < quizes.length; i++) { %>
      <tr>
-         <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
+         <td><font color=brown>
+				    <% if (quizes[i].tema === 'humanidades') { %>&nbsp;Humanidades&nbsp;<% }
+				       else if (quizes[i].tema === 'ocio') { %>&nbsp;Ocio&nbsp;<% }
+				       else if (quizes[i].tema === 'ciencia') { %>&nbsp;Ciencia&nbsp;<% }
+				       else if (quizes[i].tema === 'tecnologia') { %>&nbsp;Tecnología&nbsp;<% }
+				       else { %>&nbsp;Otro&nbsp;<% } %>
+            </font>
+			   </td>
+         </td>
+         <td>&nbsp;<a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %>&nbsp;</a></td>
          <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
          <td>
            <form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
