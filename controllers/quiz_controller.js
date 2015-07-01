@@ -133,3 +133,32 @@ exports.destroy = function(req, res) {
     res.redirect('/quizes');
   }).catch(function(error){next(error)});
 };
+
+// GET /quizes/statistics
+exports.statistics = function(req, res) {
+  models.Quiz.findAll({include: [{ model: models.Comment}]}).then(
+    function(quizes) {
+      var _statistics = { num_quizes: 0, num_comments: 0, average: 0,
+                          num_with_comments: 0, num_with_comments_not_published: 0,
+                          num_without_comments: 0,
+                         };
+
+      for(var i=0; i<quizes.length; i++) {
+        if(quizes[i].Comments.length) {
+          _statistics.num_comments += quizes[i].Comments.length;
+          _statistics.num_with_comments++;
+          for(var j=0; j<quizes[i].Comments.length; j++) {
+            if(!quizes[i].Comments[j].publicado)
+                _statistics.num_with_comments_not_published++;
+          }
+        }
+        else {
+          _statistics.num_without_comments++;
+        }
+      }
+      _statistics.num_quizes = quizes.length;
+      _statistics.average    = (_statistics.num_comments/_statistics.num_quizes).toFixed(2);
+
+      res.render('quizes/statistics', { statistics: _statistics, errors: [] });
+  });
+}

@@ -40,6 +40,24 @@ app.use(function(req, res, next) {
   next();
 });
 
+// auto-logout de sesión (Ejercicio P2P Obligatorio)
+app.use(function(req, res, next) {
+
+  if(req.session.user) {
+      if ( Date.now() > req.session.user.lasttime + (2*60*1000)  ) {
+        /* TimeExpired! destruir sesion. */
+        delete req.session.user;
+      }
+      else {
+          /* Refrescamos time */
+          req.session.user.lasttime = Date.now();
+      }
+  }
+
+  next();
+});
+
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler

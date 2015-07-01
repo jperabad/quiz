@@ -32,7 +32,8 @@ exports.create = function(req, res) {
 
         // Crear req.session.user y guardar campos   id  y  username
         // La sesión se define por la existencia de:    req.session.user
-        req.session.user = {id:user.id, username:user.username};
+        // se añade lasttime para controlar tiempo de sesion: módulo p2p obligatorio
+        req.session.user = {id:user.id, username:user.username, lasttime:Date.now(), expired:false};
 
         res.redirect(req.session.redir.toString());// redirección a path anterior a login
     });
